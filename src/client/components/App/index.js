@@ -52,6 +52,14 @@ class App extends React.Component {
         }, () => {
           this.autoSelectGroup();
         });
+      } else {
+        this.setState({
+          selectedGroup: {
+            id: '',
+            name: '',
+            isSubGroup: false
+          }
+        });
       }
     });
 
@@ -125,45 +133,6 @@ class App extends React.Component {
     const { speakerGroups, selectedGroup } = this.state;
     const menu = new SystemMenu();
     const menuItems = [];
-
-    /*
-    const speakerGroups = [
-      {
-        ID: 'RINCON_5CAAFDFE92B601400:2580414485',
-        Name: 'Living Room + 1',
-        host: '10.0.0.181',
-        subGroups: [
-          {
-            ID: 'RINCON_48A6B811AE4401400',
-            Name: 'Family Room',
-            host: '10.0.0.133'
-          },
-          {
-            ID: 'RINCON_5CAAFDFE92B601400',
-            Name: 'Living Room',
-            host: '10.0.0.181'
-          }
-        ]
-      },
-      {
-        ID: 'RINCON_5CAAFDFE92B601400:2580414485',
-        Name: 'Living Room + 2',
-        host: '10.0.0.181',
-        subGroups: [
-          {
-            ID: 'RINCON_48A6B811AE4401400',
-            Name: 'Family Room 2',
-            host: '10.0.0.133'
-          },
-          {
-            ID: 'RINCON_5CAAFDFE92B601400',
-            Name: 'Living Room 2x',
-            host: '10.0.0.181'
-          }
-        ]
-      }
-    ];
-    */
 
     speakerGroups.forEach((group) => {
       let subGroups = [];
@@ -265,7 +234,7 @@ class App extends React.Component {
           currentTrack={currentTrack}
           setCustomTheme={this.setCustomTheme}
           setLaunchAtStart={this.setLaunchAtStart}
-          disableCurrentTrack={isSubGroup}
+          disableCurrentTrack={!!isSubGroup}
         />
       </div>
     );
