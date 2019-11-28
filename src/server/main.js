@@ -90,10 +90,14 @@ const commenceSpeakerIPC = async (isRefresh) => {
 
   const speakerIPC = new SpeakerIPC(speaker, groups, mainWindow, store);
 
-  if (isRefresh) {
-    speakerIPC.connections();
+  if (speaker.sonos) {
+    if (isRefresh) {
+      speakerIPC.connections();
+    } else {
+      speakerIPC.start();
+    }
   } else {
-    speakerIPC.start();
+    speakerIPC.noSpeakerDetected();
   }
 };
 

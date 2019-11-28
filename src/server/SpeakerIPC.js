@@ -27,6 +27,11 @@ class SpeakerIPC {
     });
   }
 
+  noSpeakerDetected = () => {
+    this.mainWindow.webContents.send('SELECTED_SPEAKER_GROUP', null);
+    this.mainWindow.webContents.send('SPEAKER_GROUPS', []);
+  }
+
   connections = () => {
     this.sentFromSpeaker();
 
