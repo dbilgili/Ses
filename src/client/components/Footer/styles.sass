@@ -1,0 +1,43 @@
+@import '../../shared/styles/variables'
+@import '../../shared/styles/themes/footer/dark'
+@import '../../shared/styles/themes/footer/mondrian'
+
+.footerWrapper
+  align-items: center
+  background-color: $light-gray
+  border-top: 1px $gray solid
+  bottom: 0
+  display: flex
+  flex-direction: column
+  height: 75px
+  justify-content: center
+  left: 0
+  padding: 0 20px
+  position: absolute
+  width: calc(100% - 40px)
+
+  .settingsIcon
+    bottom: 7px
+    height: 20px
+    position: absolute
+    right: 9px
+    width: 20px
+
+  .currentTrack
+    display: flex
+    flex-direction: column
+    margin-top: 10px
+    max-width: 100%
+
+    span
+      color: $black
+      font-family: monospace
+      font-size: 12px
+      overflow: hidden
+      padding: 0 10px
+      text-align: center
+      text-overflow: ellipsis
+      white-space: nowrap
+
+      &:first-of-type
+        font-weight: bold

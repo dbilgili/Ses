@@ -1,0 +1,38 @@
+body
+  box-sizing: border-box
+  margin: 0
+  padding: 0
+
+button
+  background: none
+  border: none
+  outline: none
+  padding: 0
+
+input
+  width: 100%
+
+input[type=range]
+  -webkit-appearance: none
+  background: transparent
+  pointer-events: none
+
+input[type=range]:focus
+  outline: none
+
+input[type=range]::-webkit-slider-thumb
+  -webkit-appearance: none
+  background: $black
+  border-radius: 50%
+  cursor: pointer
+  height: 20px
+  margin-top: -9px
+  pointer-events: auto
+  width: 20px
+
+input[type=range]::-webkit-slider-runnable-track
+  background: rgba($black, 0.7)
+  border-radius: 2px
+  height: 2px
+  pointer-events: none
+  width: 100%

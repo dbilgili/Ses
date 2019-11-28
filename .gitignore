@@ -1,0 +1,7 @@
+.vscode
+node_modules
+dist
+*.log
+yarn.lock
+build/bundle.js
+build/index.html
