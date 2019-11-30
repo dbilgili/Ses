@@ -49,7 +49,7 @@ class SpeakerIPC {
 
     this.mainWindow.webContents.send('SPEAKER_GROUPS', this.speakerGroups);
 
-    this.mainWindow.webContents.send('SELECTED_SPEAKER_GROUP', this.store.get('selectedSpeakerGroup'));
+    this.mainWindow.webContents.send('SELECTED_SPEAKER_GROUP', !!this.store.get('selectedSpeakerGroup'));
 
     ipcMain.on('PLAY_STATE', (event, arg) => {
       if (arg) {

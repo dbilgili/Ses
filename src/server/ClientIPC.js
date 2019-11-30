@@ -41,7 +41,7 @@ class ClientIPC {
       ipcMain.on('SET_LAUNCH_AT_STARTUP', (event, arg) => {
         this.store.set('launchAtStart', arg);
         this.app.setLoginItemSettings({
-          openAtLogin: this.store.get('launchAtStart'),
+          openAtLogin: !!this.store.get('launchAtStart'),
         });
       });
 
@@ -49,8 +49,8 @@ class ClientIPC {
         this.speakerIPC(true);
       });
 
-      this.mainWindow.webContents.send('IS_MONDRIAN_THEME', this.store.get('isMondrianTheme'));
-      this.mainWindow.webContents.send('LAUNCH_AT_STARTUP', this.store.get('launchAtStart'));
+      this.mainWindow.webContents.send('IS_MONDRIAN_THEME', !!this.store.get('isMondrianTheme'));
+      this.mainWindow.webContents.send('LAUNCH_AT_STARTUP', !!this.store.get('launchAtStart'));
     });
   }
 }

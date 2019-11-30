@@ -242,7 +242,7 @@ class App extends React.Component {
         </div>
         <Controllers
           themes={{ darkTheme, mondrianTheme }}
-          disableControls={isSubGroup}
+          disableControls={!!isSubGroup}
         />
         <Footer
           themes={{ darkTheme, mondrianTheme }}
