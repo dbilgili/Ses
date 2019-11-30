@@ -28,6 +28,12 @@ class Controllers extends React.Component {
     });
   }
 
+  componentWillUnmount() {
+    ipcRenderer.removeAllListeners('GET_VOLUME');
+    ipcRenderer.removeAllListeners('MUTE_STATE');
+    ipcRenderer.removeAllListeners('PLAY_STATE');
+  }
+
   setVolume = (e) => {
     this.setState({ volume: e.target.value }, () => {
       ipcRenderer.send('SET_VOLUME', this.state.volume);
