@@ -91,6 +91,15 @@ class App extends React.Component {
     });
   }
 
+  componentWillUnmount() {
+    ipcRenderer.removeAllListeners('SPEAKER_GROUPS');
+    ipcRenderer.removeAllListeners('SELECTED_SPEAKER_GROUP');
+    ipcRenderer.removeAllListeners('GET_CURRENT_TRACK');
+    ipcRenderer.removeAllListeners('DARK_THEME');
+    ipcRenderer.removeAllListeners('IS_MONDRIAN_THEME');
+    ipcRenderer.removeAllListeners('LAUNCH_AT_STARTUP');
+  }
+
   autoSelectGroup = () => {
     const { speakerGroups, selectedGroup } = this.state;
 
@@ -193,7 +202,13 @@ class App extends React.Component {
   }
 
   refreshSpeakers = () => {
-    ipcRenderer.send('REFRESH_SPEAKERS');
+    this.setState({
+      selectedGroup: {
+        id: 'loading',
+        name: 'Loading..',
+        isSubGroup: false
+      }
+    }, () => ipcRenderer.send('REFRESH_SPEAKERS'));
   }
 
   render() {
@@ -203,6 +218,7 @@ class App extends React.Component {
       mondrianTheme,
       launchAtStart,
       selectedGroup: {
+        id,
         name,
         isSubGroup
       },
@@ -218,7 +234,7 @@ class App extends React.Component {
         <div className={styles.header}>
           <button
             type="button"
-            className={styles.groupSelector}
+            className={classnames(styles.groupSelector, id === 'loading' ? styles.loading : null)}
             onClick={() => this.speakerGroupsMenu.show({ x: 100, y: 35 })}
           >
             {name || 'Select a group'}
