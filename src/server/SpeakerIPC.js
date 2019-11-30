@@ -1,3 +1,4 @@
+/* eslint-disable class-methods-use-this */
 // eslint-disable-next-line import/no-extraneous-dependencies
 const { ipcMain } = require('electron');
 
@@ -7,6 +8,15 @@ class SpeakerIPC {
     this.mainWindow = mainWindow;
     this.speakerGroups = speakerGroups;
     this.store = store;
+  }
+
+  destroy() {
+    ipcMain.removeAllListeners('PLAY_STATE');
+    ipcMain.removeAllListeners('SET_MUTE_STATE');
+    ipcMain.removeAllListeners('SET_VOLUME');
+    ipcMain.removeAllListeners('NEXT_SONG');
+    ipcMain.removeAllListeners('PREV_SONG');
+    ipcMain.removeAllListeners('SET_SELECTED_SPEAKER_GROUP');
   }
 
   sentFromSpeaker = () => {
@@ -33,6 +43,8 @@ class SpeakerIPC {
   }
 
   connections = () => {
+    this.destroy();
+
     this.sentFromSpeaker();
 
     this.mainWindow.webContents.send('SPEAKER_GROUPS', this.speakerGroups);
