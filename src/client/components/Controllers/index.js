@@ -144,6 +144,7 @@ class Controllers extends React.Component {
 
 Controllers.propTypes = {
   themes: PropTypes.objectOf(PropTypes.any).isRequired,
+  disableControls: PropTypes.bool.isRequired
 };
 
 export default Controllers;
