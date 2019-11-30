@@ -10,7 +10,6 @@ const SpeakerIPC = require('./SpeakerIPC');
 const ClientIPC = require('./ClientIPC');
 const TrayGenerator = require('./TrayGenerator');
 
-
 let mainWindow = null;
 let aboutWindow = null;
 let speaker = null;
@@ -82,7 +81,6 @@ const createMainWindow = () => {
     }
   });
 };
-
 
 const commenceSpeakerIPC = async (isRefresh) => {
   speaker = new Speaker();
