@@ -11,7 +11,7 @@
     "dist": "electron-builder"
   },
   "author": "Dogacan Bilgili",
-  "license": "ISC",
+  "license": "GNU",
   "dependencies": {
     "@svgr/webpack": "^4.3.3",
     "babel-polyfill": "^6.26.0",
