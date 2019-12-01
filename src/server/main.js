@@ -13,6 +13,7 @@ const TrayGenerator = require('./TrayGenerator');
 let mainWindow = null;
 let aboutWindow = null;
 let speaker = null;
+let speakerIPC = null;
 
 const store = new Store();
 
@@ -86,7 +87,7 @@ const commenceSpeakerIPC = async (isRefresh) => {
   speaker = new Speaker();
   const groups = await speaker.listSpeakers();
 
-  const speakerIPC = new SpeakerIPC(speaker, groups, mainWindow, store);
+  speakerIPC = new SpeakerIPC(speaker, groups, mainWindow, store);
 
   if (speaker.sonos) {
     if (isRefresh) {
@@ -110,17 +111,7 @@ const createTray = () => {
 
   trayObject.tray.on('click', async () => {
     if (mainWindow.isVisible() && speaker.sonos) {
-      const volume = await speaker.sonos.getVolume();
-      mainWindow.webContents.send('GET_VOLUME', volume);
-
-      const currentTrack = await speaker.sonos.currentTrack();
-      mainWindow.webContents.send('GET_CURRENT_TRACK', currentTrack);
-
-      const muteState = await speaker.sonos.getMuted();
-      mainWindow.webContents.send('MUTE_STATE', muteState);
-
-      const playState = await speaker.sonos.getCurrentState();
-      mainWindow.webContents.send('PLAY_STATE', playState);
+      speakerIPC.speakerCurrentInfo();
     }
   });
 };
