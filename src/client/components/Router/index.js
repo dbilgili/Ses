@@ -25,7 +25,7 @@ class Router extends React.Component {
       case 'about':
         return <About />;
       default:
-        return <div>no-query</div>;
+        return null;
     }
   }
 }
