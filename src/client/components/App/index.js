@@ -63,7 +63,7 @@ class App extends React.Component {
       }
     });
 
-    ipcRenderer.on('GET_CURRENT_TRACK', (event, currentTrack) => {
+    ipcRenderer.on('CURRENT_TRACK', (event, currentTrack) => {
       this.setState({
         currentTrack: {
           artist: currentTrack.artist,
@@ -94,7 +94,7 @@ class App extends React.Component {
   componentWillUnmount() {
     ipcRenderer.removeAllListeners('SPEAKER_GROUPS');
     ipcRenderer.removeAllListeners('SELECTED_SPEAKER_GROUP');
-    ipcRenderer.removeAllListeners('GET_CURRENT_TRACK');
+    ipcRenderer.removeAllListeners('CURRENT_TRACK');
     ipcRenderer.removeAllListeners('DARK_THEME');
     ipcRenderer.removeAllListeners('IS_MONDRIAN_THEME');
     ipcRenderer.removeAllListeners('LAUNCH_AT_STARTUP');

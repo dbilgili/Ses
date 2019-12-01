@@ -17,15 +17,23 @@ class SpeakerIPC {
     ipcMain.removeAllListeners('NEXT_SONG');
     ipcMain.removeAllListeners('PREV_SONG');
     ipcMain.removeAllListeners('SET_SELECTED_SPEAKER_GROUP');
+    this.removeSpeakerListeners();
   }
 
-  sentFromSpeaker = () => {
+  removeSpeakerListeners = () => {
+    this.speaker.sonos.removeAllListeners('Volume');
+    this.speaker.sonos.removeAllListeners('CurrentTrack');
+    this.speaker.sonos.removeAllListeners('Muted');
+    this.speaker.sonos.removeAllListeners('PlayState');
+  }
+
+  onSpeakerUpdate = () => {
     this.speaker.sonos.on('Volume', (volume) => {
       this.mainWindow.webContents.send('GET_VOLUME', volume);
     });
 
     this.speaker.sonos.on('CurrentTrack', (currentTrack) => {
-      this.mainWindow.webContents.send('GET_CURRENT_TRACK', currentTrack);
+      this.mainWindow.webContents.send('CURRENT_TRACK', currentTrack);
     });
 
     this.speaker.sonos.on('Muted', (muteState) => {
@@ -42,10 +50,22 @@ class SpeakerIPC {
     this.mainWindow.webContents.send('SPEAKER_GROUPS', []);
   }
 
+  speakerCurrentInfo = async () => {
+    const volume = await this.speaker.sonos.getVolume();
+    const currentTrack = await this.speaker.sonos.currentTrack();
+    const muteState = await this.speaker.sonos.getMuted();
+    const playState = await this.speaker.sonos.getCurrentState();
+
+    this.mainWindow.webContents.send('PLAY_STATE', playState);
+    this.mainWindow.webContents.send('CURRENT_TRACK', currentTrack);
+    this.mainWindow.webContents.send('GET_VOLUME', volume);
+    this.mainWindow.webContents.send('MUTE_STATE', muteState);
+  }
+
   connections = () => {
     this.destroy();
 
-    this.sentFromSpeaker();
+    this.onSpeakerUpdate();
 
     this.mainWindow.webContents.send('SPEAKER_GROUPS', this.speakerGroups);
 
@@ -89,8 +109,10 @@ class SpeakerIPC {
       const { host, subGroups } = arg;
 
       try {
+        this.removeSpeakerListeners();
         await this.speaker.connectToKnownSpeaker(host, subGroups);
-        this.sentFromSpeaker();
+        await this.speakerCurrentInfo();
+        this.onSpeakerUpdate();
       } catch (e) {
         throw Error(e);
       }
