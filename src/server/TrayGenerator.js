@@ -1,5 +1,5 @@
 // eslint-disable-next-line import/no-extraneous-dependencies
-const { Tray } = require('electron');
+const { Tray, Menu } = require('electron');
 const path = require('path');
 
 class TrayGenerator {
@@ -40,22 +40,27 @@ class TrayGenerator {
     }
   };
 
+  rightClickMenu = () => {
+    const menu = [
+      {
+        role: 'quit',
+        accelerator: 'Command+Q'
+      }
+    ];
+
+    this.tray.popUpContextMenu(Menu.buildFromTemplate(menu));
+  }
+
   createTray = () => {
     this.tray = new Tray(path.join(__dirname, './assets/IconTemplate.png'));
 
     this.tray.setIgnoreDoubleClickEvents(true);
+
     this.tray.on('click', () => {
       this.toggleWindow();
-      if (this.mainWindow.isVisible()) {
-        this.tray.setHighlightMode('always');
-      } else {
-        this.tray.setHighlightMode('never');
-      }
     });
 
-    this.mainWindow.on('hide', () => {
-      this.tray.setHighlightMode('never');
-    });
+    this.tray.on('right-click', this.rightClickMenu);
   };
 }
 
