@@ -12,8 +12,11 @@ const TrayGenerator = require('./TrayGenerator');
 
 let mainWindow = null;
 let aboutWindow = null;
+let trayObject = null;
 let speaker = null;
 let speakerIPC = null;
+
+const gotTheLock = app.requestSingleInstanceLock();
 
 const store = new Store();
 
@@ -30,16 +33,14 @@ const createAboutWindow = () => {
     height: 185,
     resizable: is.development,
     title: 'About',
+    minimizable: false,
+    maximizable: false,
     webPreferences: {
       devTools: is.development,
       nodeIntegration: true,
       backgroundThrottling: false
     }
   });
-
-  aboutWindow.setMinimizable(false);
-  aboutWindow.setMaximizable(false);
-  aboutWindow.setResizable(false);
 
   aboutWindow.on('close', (e) => {
     e.preventDefault();
@@ -106,7 +107,7 @@ const commenceClientIPC = async () => {
 };
 
 const createTray = () => {
-  const trayObject = new TrayGenerator(mainWindow, aboutWindow);
+  trayObject = new TrayGenerator(mainWindow, aboutWindow);
   trayObject.createTray();
 
   trayObject.tray.on('click', async () => {
@@ -116,23 +117,33 @@ const createTray = () => {
   });
 };
 
-app.dock.hide();
-
-app.on('ready', () => {
-  createAboutWindow();
-  createMainWindow();
-  commenceClientIPC();
-  commenceSpeakerIPC(false);
-  createTray();
-  globalShortcut.register('Command+R', () => null);
-});
-
-app.on('before-quit', () => {
-  aboutWindow.destroy();
-});
-
-if (!is.development) {
-  app.setLoginItemSettings({
-    openAtLogin: store.get('launchAtStart'),
+if (!gotTheLock) {
+  app.quit();
+} else {
+  app.on('ready', () => {
+    createAboutWindow();
+    createMainWindow();
+    commenceClientIPC();
+    commenceSpeakerIPC(false);
+    createTray();
+    globalShortcut.register('Command+R', () => null);
   });
+
+  app.on('second-instance', () => {
+    if (mainWindow) {
+      trayObject.showWindow();
+    }
+  });
+
+  app.on('before-quit', () => {
+    aboutWindow.destroy();
+  });
+
+  if (!is.development) {
+    app.setLoginItemSettings({
+      openAtLogin: store.get('launchAtStart'),
+    });
+  }
+
+  app.dock.hide();
 }
