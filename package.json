@@ -63,7 +63,8 @@
       "build"
     ],
     "dmg": {
-      "title": "${productName}"
+      "title": "${productName}",
+      "icon": "disk.icns"
     }
   }
 }
