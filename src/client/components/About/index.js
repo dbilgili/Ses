@@ -1,6 +1,7 @@
 import React from 'react';
 import styles from './styles.sass';
 import { shell } from '../../shared/utils/electron';
+import pkg from '../../../../package.json';
 
 import Icons from '../../shared/components/Icons';
 
@@ -10,7 +11,7 @@ const About = () => (
       <Icons type="Logo" isDarkMode={false} isMondridanMode={false} />
     </div>
     <span className={styles.appName}>Ses</span>
-    <span className={styles.appDetails}>Version 1.0.0</span>
+    <span className={styles.appDetails}>{`Version ${pkg.version}`}</span>
     <button
       type="button"
       onClick={() => shell.openExternal('https://github.com/dbilgili/ses')}
