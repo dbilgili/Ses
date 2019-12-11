@@ -167,7 +167,7 @@ class App extends React.Component {
 
     menuItems.unshift(...[
       {
-        label: 'Available Groups:',
+        label: 'Available Rooms:',
         enabled: false,
       },
       {
@@ -237,7 +237,7 @@ class App extends React.Component {
             className={classnames(styles.groupSelector, id === 'loading' ? styles.loading : null)}
             onClick={() => this.speakerGroupsMenu.show({ x: 100, y: 35 })}
           >
-            {name || 'Select a group'}
+            {name || 'Select a room'}
           </button>
         </div>
         <Controllers
