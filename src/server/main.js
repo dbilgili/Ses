@@ -1,3 +1,5 @@
+/* eslint-disable import/no-extraneous-dependencies */
+/* eslint-disable global-require */
 // eslint-disable-next-line import/no-extraneous-dependencies
 const { app, BrowserWindow, globalShortcut } = require('electron');
 const { is } = require('electron-util');
@@ -127,6 +129,14 @@ if (!gotTheLock) {
     commenceSpeakerIPC(false);
     createTray();
     globalShortcut.register('Command+R', () => null);
+
+    const { powerMonitor } = require('electron');
+
+    powerMonitor.on('resume', () => {
+      speaker.destroy();
+      speakerIPC.destroy();
+      setTimeout(() => commenceSpeakerIPC(true), 1000);
+    });
   });
 
   app.on('second-instance', () => {
