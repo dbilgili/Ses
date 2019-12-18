@@ -21,13 +21,15 @@ class SpeakerIPC {
   }
 
   removeSpeakerListeners = () => {
-    this.speaker.sonos.removeAllListeners('Volume');
-    this.speaker.sonos.removeAllListeners('CurrentTrack');
-    this.speaker.sonos.removeAllListeners('Muted');
-    this.speaker.sonos.removeAllListeners('PlayState');
+    if (this.speaker.sonos) {
+      this.speaker.sonos.removeAllListeners('Volume');
+      this.speaker.sonos.removeAllListeners('CurrentTrack');
+      this.speaker.sonos.removeAllListeners('Muted');
+      this.speaker.sonos.removeAllListeners('PlayState');
+    }
   }
 
-  onSpeakerUpdate = () => {
+  listenSpeakerEvents = () => {
     this.speaker.sonos.on('Volume', (volume) => {
       this.mainWindow.webContents.send('GET_VOLUME', volume);
     });
@@ -62,13 +64,22 @@ class SpeakerIPC {
     this.mainWindow.webContents.send('MUTE_STATE', muteState);
   }
 
+  connectToSpeaker = async (host, subGroups) => {
+    try {
+      this.removeSpeakerListeners();
+      await this.speaker.connectToKnownSpeaker(host, subGroups);
+      this.listenSpeakerEvents();
+      await this.speakerCurrentInfo();
+    } catch (e) {
+      throw Error(e);
+    }
+  }
+
   connections = () => {
     this.destroy();
-
-    this.onSpeakerUpdate();
+    this.listenSpeakerEvents();
 
     this.mainWindow.webContents.send('SPEAKER_GROUPS', this.speakerGroups);
-
     this.mainWindow.webContents.send('SELECTED_SPEAKER_GROUP', this.store.get('selectedSpeakerGroup'));
 
     ipcMain.on('PLAY_STATE', (event, arg) => {
@@ -108,14 +119,7 @@ class SpeakerIPC {
 
       const { host, subGroups } = arg;
 
-      try {
-        this.removeSpeakerListeners();
-        await this.speaker.connectToKnownSpeaker(host, subGroups);
-        await this.speakerCurrentInfo();
-        this.onSpeakerUpdate();
-      } catch (e) {
-        throw Error(e);
-      }
+      this.connectToSpeaker(host, subGroups);
     });
   }
 
