@@ -6,6 +6,11 @@ class Speaker {
     this.subGroups = [];
   }
 
+  destroy = () => {
+    this.sonos = null;
+    this.subGroups = [];
+  }
+
   findIndexByHost = (child, parentHost) => child.findIndex(item => item.host === parentHost)
 
   connectToKnownSpeaker = async (host, subGroups) => {
