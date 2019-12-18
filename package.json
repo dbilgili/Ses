@@ -1,7 +1,7 @@
 {
   "name": "ses",
   "productName": "Ses",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Tray app to control sonos speakers",
   "main": "src/server/main.js",
   "scripts": {
