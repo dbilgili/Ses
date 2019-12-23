@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="https://github.com/dbilgili/Ses/blob/files/images/logo.svg?sanitize=true" height="70">
+  <img src="https://github.com/dbilgili/Ses/blob/files/images/logo.svg?sanitize=true" height="70" width="70">
   <h3 align="center">Ses</h3>
   <p align="center">Open-source Sonos speaker controller for macOS<p>
   <p align="center"><a href="https://github.com/dbilgili/Ses/raw/files/Ses-1.0.1-mac.zip">Download the latest version</a><p>
