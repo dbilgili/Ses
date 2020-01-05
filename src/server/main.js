@@ -44,6 +44,14 @@ const createAboutWindow = () => {
     }
   });
 
+  aboutWindow.on('focus', () => {
+    globalShortcut.register('Command+R', () => null);
+  })
+
+  aboutWindow.on('blur', () => {
+    globalShortcut.unregister('Command+R');
+  });
+
   aboutWindow.on('close', (e) => {
     e.preventDefault();
     aboutWindow.hide();
@@ -79,9 +87,14 @@ const createMainWindow = () => {
     mainWindow.loadURL(`file://${path.join(__dirname, '../../build/index.html?screen=main')}`);
   }
 
+  mainWindow.on('focus', () => {
+    globalShortcut.register('Command+R', () => null);
+  })
+
   mainWindow.on('blur', () => {
     if (!mainWindow.webContents.isDevToolsOpened()) {
       mainWindow.hide();
+      globalShortcut.unregister('Command+R');
     }
   });
 };
@@ -128,7 +141,6 @@ if (!gotTheLock) {
     commenceClientIPC();
     commenceSpeakerIPC(false);
     createTray();
-    globalShortcut.register('Command+R', () => null);
 
     const { powerMonitor } = require('electron');
 
