@@ -19,7 +19,7 @@ class Controllers extends React.Component {
   }
 
   componentDidMount() {
-    ipcRenderer.on('GET_VOLUME', (event, volume) => this.setState({ volume }));
+    ipcRenderer.on('CURRENT_VOLUME', (event, volume) => this.setState({ volume }));
     ipcRenderer.on('MUTE_STATE', (event, muteState) => this.setState({ muteState }));
     ipcRenderer.on('PLAY_STATE', (event, playState) => {
       this.setState({
@@ -29,7 +29,7 @@ class Controllers extends React.Component {
   }
 
   componentWillUnmount() {
-    ipcRenderer.removeAllListeners('GET_VOLUME');
+    ipcRenderer.removeAllListeners('CURRENT_VOLUME');
     ipcRenderer.removeAllListeners('MUTE_STATE');
     ipcRenderer.removeAllListeners('PLAY_STATE');
   }
