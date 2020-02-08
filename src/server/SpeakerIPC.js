@@ -31,7 +31,7 @@ class SpeakerIPC {
 
   listenSpeakerEvents = () => {
     this.speaker.sonos.on('Volume', (volume) => {
-      this.mainWindow.webContents.send('GET_VOLUME', volume);
+      this.mainWindow.webContents.send('CURRENT_VOLUME', volume);
     });
 
     this.speaker.sonos.on('CurrentTrack', (currentTrack) => {
@@ -60,7 +60,7 @@ class SpeakerIPC {
 
     this.mainWindow.webContents.send('PLAY_STATE', playState);
     this.mainWindow.webContents.send('CURRENT_TRACK', currentTrack);
-    this.mainWindow.webContents.send('GET_VOLUME', volume);
+    this.mainWindow.webContents.send('CURRENT_VOLUME', volume);
     this.mainWindow.webContents.send('MUTE_STATE', muteState);
   }
 
@@ -99,6 +99,8 @@ class SpeakerIPC {
     });
 
     ipcMain.on('SET_VOLUME', (event, arg) => {
+      // console.log('SET VOLUME SENT FROM CLIENT: ', arg);
+      // console.log(this.speaker.sonos);
       if (this.speaker.subGroups.length) {
         this.speaker.subGroups.forEach(group => group.setVolume(arg));
       } else {
@@ -125,7 +127,7 @@ class SpeakerIPC {
 
   start = () => {
     if (this.speaker.sonos) {
-      this.mainWindow.webContents.on('did-finish-load', () => this.connections());
+      this.mainWindow.webContents.on('did-finish-load', this.connections);
     }
   }
 }
