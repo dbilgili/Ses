@@ -46,7 +46,7 @@ const createAboutWindow = () => {
 
   aboutWindow.on('focus', () => {
     globalShortcut.register('Command+R', () => null);
-  })
+  });
 
   aboutWindow.on('blur', () => {
     globalShortcut.unregister('Command+R');
@@ -89,7 +89,7 @@ const createMainWindow = () => {
 
   mainWindow.on('focus', () => {
     globalShortcut.register('Command+R', () => null);
-  })
+  });
 
   mainWindow.on('blur', () => {
     if (!mainWindow.webContents.isDevToolsOpened()) {
@@ -141,14 +141,6 @@ if (!gotTheLock) {
     commenceClientIPC();
     commenceSpeakerIPC(false);
     createTray();
-
-    const { powerMonitor } = require('electron');
-
-    powerMonitor.on('resume', () => {
-      speaker.destroy();
-      speakerIPC.destroy();
-      setTimeout(() => commenceSpeakerIPC(true), 1000);
-    });
   });
 
   app.on('second-instance', () => {
