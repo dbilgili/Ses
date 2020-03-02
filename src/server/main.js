@@ -1,9 +1,13 @@
 /* eslint-disable import/no-extraneous-dependencies */
 /* eslint-disable global-require */
 // eslint-disable-next-line import/no-extraneous-dependencies
-const { app, BrowserWindow, globalShortcut } = require('electron');
+const {
+  app,
+  BrowserWindow,
+  globalShortcut,
+} = require('electron');
+const { Listener } = require('sonos');
 const { is } = require('electron-util');
-
 const path = require('path');
 
 const Store = require('electron-store');
@@ -101,6 +105,7 @@ const createMainWindow = () => {
 
 const commenceSpeakerIPC = async (isRefresh) => {
   speaker = new Speaker();
+
   const groups = await speaker.listSpeakers();
 
   speakerIPC = new SpeakerIPC(speaker, groups, mainWindow, store);
@@ -111,8 +116,10 @@ const commenceSpeakerIPC = async (isRefresh) => {
     } else {
       speakerIPC.start();
     }
-  } else {
+  } else if (!speaker.sonos && !isRefresh) {
     speakerIPC.noSpeakerDetected();
+  } else {
+    await commenceSpeakerIPC(true);
   }
 };
 
@@ -135,12 +142,19 @@ const createTray = () => {
 if (!gotTheLock) {
   app.quit();
 } else {
-  app.on('ready', () => {
+  app.on('ready', async () => {
     createAboutWindow();
     createMainWindow();
-    commenceClientIPC();
-    commenceSpeakerIPC(false);
+    await commenceClientIPC();
+    await commenceSpeakerIPC(false);
     createTray();
+
+    const { powerMonitor } = require('electron');
+
+    // Refresh to update the possibly expired UPnP subscription.
+    powerMonitor.on('resume', async () => {
+      await commenceSpeakerIPC(true);
+    });
   });
 
   app.on('second-instance', () => {
