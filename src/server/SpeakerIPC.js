@@ -99,8 +99,6 @@ class SpeakerIPC {
     });
 
     ipcMain.on('SET_VOLUME', (event, arg) => {
-      // console.log('SET VOLUME SENT FROM CLIENT: ', arg);
-      // console.log(this.speaker.sonos);
       if (this.speaker.subGroups.length) {
         this.speaker.subGroups.forEach(group => group.setVolume(arg));
       } else {
@@ -121,7 +119,7 @@ class SpeakerIPC {
 
       const { host, subGroups } = arg;
 
-      this.connectToSpeaker(host, subGroups);
+      await this.connectToSpeaker(host, subGroups);
     });
   }
 
