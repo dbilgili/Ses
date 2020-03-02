@@ -91,8 +91,8 @@ class Footer extends React.Component {
         </button>
         {!disableCurrentTrack && (
           <div className={styles.currentTrack}>
-            {title && <span>{title}</span>}
-            {artist && <span>{artist}</span>}
+            {title && <span title={title}>{title}</span>}
+            {artist && <span title={artist}>{artist}</span>}
           </div>
         )}
       </div>
