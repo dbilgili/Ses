@@ -3,10 +3,11 @@ const { Tray, Menu } = require('electron');
 const path = require('path');
 
 class TrayGenerator {
-  constructor(mainWindow, aboutWindow) {
+  constructor(mainWindow, aboutWindow, commenceSpeakerIPC) {
     this.tray = null;
     this.mainWindow = mainWindow;
     this.aboutWindow = aboutWindow;
+    this.commenceSpeakerIPC = commenceSpeakerIPC;
   }
 
   getWindowPosition = () => {
@@ -58,6 +59,14 @@ class TrayGenerator {
 
     this.tray.on('click', () => {
       this.toggleWindow();
+    });
+
+    // Workaround to make sure UPnP active until figuring out
+    // a better solution.
+    this.tray.on('mouse-enter', async () => {
+      if (!this.mainWindow.isVisible()) {
+        await this.commenceSpeakerIPC(true);
+      }
     });
 
     this.tray.on('right-click', this.rightClickMenu);

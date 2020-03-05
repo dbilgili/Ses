@@ -6,7 +6,6 @@ const {
   BrowserWindow,
   globalShortcut,
 } = require('electron');
-const { Listener } = require('sonos');
 const { is } = require('electron-util');
 const path = require('path');
 
@@ -129,7 +128,7 @@ const commenceClientIPC = async () => {
 };
 
 const createTray = () => {
-  trayObject = new TrayGenerator(mainWindow, aboutWindow);
+  trayObject = new TrayGenerator(mainWindow, aboutWindow, commenceSpeakerIPC);
   trayObject.createTray();
 
   trayObject.tray.on('click', async () => {
