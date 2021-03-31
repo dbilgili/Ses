@@ -22,9 +22,8 @@ class TrayGenerator {
   showWindow = () => {
     const position = this.getWindowPosition();
     this.mainWindow.setPosition(position.x, position.y, false);
-    this.mainWindow.show();
     this.mainWindow.setVisibleOnAllWorkspaces(true); // put the window on all screens
-    this.mainWindow.focus(); // focus the window up front on the active screen
+    this.mainWindow.show();
     this.mainWindow.setVisibleOnAllWorkspaces(false); // disable all screen behavior
   };
 
@@ -33,7 +32,6 @@ class TrayGenerator {
       this.mainWindow.hide();
     } else {
       this.showWindow();
-      this.mainWindow.focus();
     }
 
     if (this.aboutWindow) {
