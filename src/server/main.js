@@ -99,17 +99,12 @@ const createMainWindow = () => {
 
   mainWindow.on('focus', () => {
     globalShortcut.register('Command+R', () => null);
-  });
-
-  mainWindow.on('blur', mainWindow.hide);
-
-  mainWindow.on('show', () => {
     macEventMonitor.start((NSEventMask.leftMouseDown || NSEventMask.rightMouseDown), () => {
       mainWindow.hide();
     });
   });
 
-  mainWindow.on('hide', () => {
+  mainWindow.on('blur', () => {
     if (!mainWindow.webContents.isDevToolsOpened()) {
       mainWindow.hide();
       globalShortcut.unregister('Command+R');
