@@ -8,6 +8,7 @@ const {
 } = require('electron');
 const { is } = require('electron-util');
 const path = require('path');
+const { NSEventMonitor, NSEventMask } = require('nseventmonitor');
 
 const Store = require('electron-store');
 const Speaker = require('./Speaker');
@@ -24,6 +25,8 @@ let speakerIPC = null;
 const gotTheLock = app.requestSingleInstanceLock();
 
 const store = new Store();
+
+const macEventMonitor = new NSEventMonitor();
 
 if (store.get('launchAtStart') === undefined && !is.development) {
   store.set('launchAtStart', true);
@@ -42,8 +45,10 @@ const createAboutWindow = () => {
     maximizable: false,
     webPreferences: {
       devTools: is.development,
+      backgroundThrottling: false,
       nodeIntegration: true,
-      backgroundThrottling: false
+      contextIsolation: false,
+      enableRemoteModule: true,
     }
   });
 
@@ -78,8 +83,10 @@ const createMainWindow = () => {
     resizable: is.development,
     webPreferences: {
       devTools: is.development,
+      backgroundThrottling: false,
       nodeIntegration: true,
-      backgroundThrottling: false
+      contextIsolation: false,
+      enableRemoteModule: true,
     }
   });
 
@@ -94,10 +101,19 @@ const createMainWindow = () => {
     globalShortcut.register('Command+R', () => null);
   });
 
-  mainWindow.on('blur', () => {
+  mainWindow.on('blur', mainWindow.hide);
+
+  mainWindow.on('show', () => {
+    macEventMonitor.start((NSEventMask.leftMouseDown || NSEventMask.rightMouseDown), () => {
+      mainWindow.hide();
+    });
+  });
+
+  mainWindow.on('hide', () => {
     if (!mainWindow.webContents.isDevToolsOpened()) {
       mainWindow.hide();
       globalShortcut.unregister('Command+R');
+      macEventMonitor.stop();
     }
   });
 };
